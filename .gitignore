@@ -1,0 +1,4 @@
+/project
+/python/.ipynb_checkpoints/
+/script/*
+!/script/*.tcl
