@@ -1,34 +1,32 @@
-/*
+/**
   Module name:  zmod_dac_driver
   Author: P Trujillo (pablo@controlpaths.com)
   Date: Feb 2020
-  Description:
-          Driver for ad9717. ZMOD DAC from Digilent
-  Revision:
-          1.0: Module created.
-*/
+  Description: Driver for ad9717. ZMOD DAC from Digilent
+  Revision: 1.0 Module created.
+**/
 
 module zmod_dac_driver_v1_0 (
-  input clk, /* Twice fsample */
-  input rst,
+  input clk, /* Clock input. This signal is corresponding with sample frequency */
+  input rst, /* Reset input */
 
-  input signed [13:0] is14_data_i,
-  input signed [13:0] is14_data_q,
-  input i_run,
+  input signed [13:0] is14_data_i, /* Data for ch i*/
+  input signed [13:0] is14_data_q, /* Data for ch q*/
+  input i_run, /* DAC enable input */
 
-  output signed [13:0] os14_data,
+  output signed [13:0] os14_data, /* Parallel DDR data for ADC*/
 
-  input clk_spi, /* spi_clk = clk_spi/4*/
-  input rst_spi,
-  output reg or_sck,
-  output reg or_cs,
-  output o_sdo
+  input clk_spi, /* Clock input for SPI communication. clk_spi = clk_spi/4*/
+  input rst_spi, /* DAC reset out*/
+  output reg or_sck, /* DAC SPI clk out*/
+  output reg or_cs, /* DAC SPI cs out*/
+  output o_sdo /* DAC SPI data IO out*/
   );
 
   /* dac controller */
-  reg r_dataselect, r_dacrun;
-  reg r_spi_start;
-  reg [15:0] r16_data_out;
+  reg r_dacrun; /* configuration done. DAC run signal. */
+  reg r_spi_start; /* SPI start communication */
+  reg [15:0] r16_data_out; /* SPI data out */
 
   /* dac configuration */
   always @(posedge clk)
@@ -59,8 +57,10 @@ module zmod_dac_driver_v1_0 (
     .S(1'b0)
     );
   endgenerate
+
   /* SPI controller */
-  reg [3:0] r4_spi_state, r4_data_counter;
+  reg [3:0] r4_spi_state; /* SPI communication state */
+  reg [3:0] r4_data_counter; /* SPI data counter */
 
   always @(posedge clk_spi)
     if (rst_spi) begin

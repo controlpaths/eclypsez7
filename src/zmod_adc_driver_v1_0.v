@@ -1,28 +1,26 @@
-/*
+/**
   Module name:  zmod_adc_driver
   Author: P Trujillo (pablo@controlpaths.com)
   Date: Feb 2020
-  Description:
-          Driver for ad9648. ZMOD ADC from Digilent
-  Revision:
-          1.0: Module created.
-*/
+  Description: Driver for ad9648. ZMOD ADC from Digilent. Module uses 2 different clock, so it's neccesary use synchronizers
+  Revision: 1. Module created.
+**/
 
 module zmod_adc_driver_v1_0 (
-  input clk,
-  input rst,
+  input clk, /* Clock input */
+  input rst, /* Reset input */
 
-  output signed [13:0] o14_data_a,
-  output signed [13:0] o14_data_b,
-  output reg o_adc_configured,
+  output signed [13:0] o14_data_a, /* Parallel converted ADC ch A */
+  output signed [13:0] o14_data_b, /* Parallel converted ADC ch B */
+  output reg o_adc_configured, /* Adc configuration complete signal */
 
-  input signed [13:0] i14_data,
-  input i_dco,
+  input signed [13:0] i14_data, /* Parallel input data from ADC */
+  input i_dco, /* Input ch select*/
 
-  input clk_spi, /* spi_clk = clk_spi/4*/
-  output reg or_sck,
-  output reg or_cs,
-  output o_sdio
+  input clk_spi, /* Input clock for SPI. or_sclk = clk_spi/4*/
+  output reg or_sck, /* ADC SPI clk out */
+  output reg or_cs, /* ADC SPI data IO  */
+  output o_sdio /* ADC SPI cs out */
   );
 
   localparam p_spi_pwrmode_add = 13'h08;
@@ -30,8 +28,8 @@ module zmod_adc_driver_v1_0 (
   localparam p_spi_pwrmode_value_release = 8'h00;
   localparam p_spi_chipid_add = 13'h01;
   localparam p_spi_chselect_add = 13'h05;
-  localparam p_spi_chselect_value_cha = 8'h01; /* CHA SELECT */
-  localparam p_spi_chselect_value_chb = 8'h02; /* CHB SELECT */
+  localparam p_spi_chselect_value_cha = 8'h01; /* cha select */
+  localparam p_spi_chselect_value_chb = 8'h02; /* chb select */
   localparam p_spi_chselect_value_both = 8'h03; /* BOTH SELECT */
   localparam p_spi_omode_add = 13'h14;
   localparam p_spi_omode_value_cha = 8'h31; /* CMOS | INTERLEAVED | DISABLED OPORT | 2s COMPLEMENT*/
@@ -41,13 +39,17 @@ module zmod_adc_driver_v1_0 (
   localparam p_spi_testmode_value_disabled = 8'h40; /* REPEAT PATTERN | TEST DISABLED*/
 
   /* ADC controller */
-  reg [23:0] r24_spi_data_out, r24_spi_data_out_1, r24_spi_data_out_2; /* RW | W[1:0] | A[12:0] | DATA[7:0]*/
-  reg r_spi_start, r_spi_start_1, r_spi_start_2;
-  reg [26:0] r27_delay_1ms_counter;
-  reg [29:0] r30_delay_3s_counter;
-  reg [4:0] r5_adc_config_state;
-  reg r_cmd_read;
-  wire w_spi_busy;
+  reg [23:0] r24_spi_data_out;    /* Synchronizer 0 spi_data_out. RW | W[1:0] | A[12:0] | DATA[7:0]*/
+  reg [23:0] r24_spi_data_out_1;  /* Synchronizer 1 spi_data_out. RW | W[1:0] | A[12:0] | DATA[7:0]*/
+  reg [23:0] 24_spi_data_out_2;   /* Synchronizer 2 spi_data_out. RW | W[1:0] | A[12:0] | DATA[7:0]*/
+  reg r_spi_start; /* Sychronyzer 0 spi_start */
+  reg r_spi_start_1; /* Synchronizer 1 spi start */
+  reg r_spi_start_2; /* Synchronizer 2 spi start */
+  reg [26:0] r27_delay_1ms_counter; /* Initial 1ms delay counter*/
+  reg [29:0] r30_delay_3s_counter; /* Initial 3 seconds delay counter. Only for Debug.*/
+  reg [4:0] r5_adc_config_state; /* ADC controller state */
+  reg r_cmd_read; /* Read command signal */
+  wire w_spi_busy; /* SPI busy signal */
 
   always @(posedge clk)
     if (rst) begin
@@ -61,7 +63,7 @@ module zmod_adc_driver_v1_0 (
     else
       case (r5_adc_config_state)
         0: begin
-          if (r27_delay_1ms_counter == 27'd10/*0000*/) r5_adc_config_state <= 5'd1;
+          if (r27_delay_1ms_counter == 27'd100000) r5_adc_config_state <= 5'd1;
           else r5_adc_config_state <= 5'd0;
 
           r27_delay_1ms_counter <= r27_delay_1ms_counter+27'd1;
@@ -242,8 +244,8 @@ module zmod_adc_driver_v1_0 (
     end
 
   /* SPI controller */
-  reg [3:0] r4_spi_state;
-  reg [4:0] r5_data_counter;
+  reg [3:0] r4_spi_state; /* SPI controller state */
+  reg [4:0] r5_data_counter; /* SPI data to write signal */
 
   assign w_spi_busy = (r_spi_start | r_spi_start_1 | r_spi_start_2 | (r4_spi_state != 4'd0))? 1'b1:1'b0;
 

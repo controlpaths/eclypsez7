@@ -1,0 +1,5 @@
+file ../../eclypsez7/src/top_eclypse_v1_0.v
+file ../../eclypsez7/src/zmod_adc_driver_v1_0.v
+file ../../eclypsez7/src/zmod_dac_driver_v1_0.v
+
+outputdir ../../eclypsez7/doc/

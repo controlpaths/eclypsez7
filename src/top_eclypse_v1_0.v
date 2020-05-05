@@ -1,61 +1,60 @@
-/*
+/**
   Module name:  top_eclypse_v1_0
   Author: P Trujillo (pablo@controlpaths.com)
   Date: Feb 2020
-  Description:
-          Top module for manage DAC output. ZMOD DAC from Digilent
-  Revision:
-          1.0: Module created.
-*/
+  Description: Top module for manage DAC output. ZMOD DAC from Digilent
+  Revision: 1.0 Module created.
+**/
 
 module top_eclypse_v1_0 (
-  input clk125mhz,
+  input clk125mhz,/* 25Mhz input clock */
 
-  output [13:0] o14_dac_data,
-  output o_dac_clkout,
-  output o_dac_dclkio,
-  output o_dac_fsadji,
-  output o_dac_fsadjq,
-  output o_dac_sck,
-  output o_dac_sdio,
-  output o_dac_cs,
-  output o_dac_rst,
+  output [13:0] o14_dac_data, /* Parallel DAC data out */
+  output o_dac_clkout, /* DAC clock out */
+  output o_dac_dclkio, /* DAC output select */
+  output o_dac_fsadji, /* DAC full scale select for ch i out*/
+  output o_dac_fsadjq, /* DAC full scale select for ch q out*/
+  output o_dac_sck, /* DAC SPI clk out*/
+  output o_dac_sdio, /* DAC SPI data IO out*/
+  output o_dac_cs, /* DAC SPI cs out*/
+  output o_dac_rst, /* DAC reset out*/
 
-  input [13:0] i14_adc_data,
-  input i_adc_dco,
-  output o_adc_clkout_p,
-  output o_adc_clkout_n,
-  output o_adc_sck,
-  inout o_adc_sdio,
-  output o_adc_cs,
-  output o_adc_sync,
+  input [13:0] i14_adc_data, /* Parallel ADC data in */
+  input i_adc_dco, /* ADC data select input */
+  output o_adc_clkout_p, /* ADC differential output clock p*/
+  output o_adc_clkout_n, /* ADC differential output clock p*/
+  output o_adc_sck, /* ADC SPI clk out */
+  inout o_adc_sdio, /* ADC SPI data IO  */
+  output o_adc_cs, /* ADC SPI cs out */
+  output o_adc_sync, /* ADC SYNC out. SIgnal used for select configuration mode */
 
-  output reg or_zmod_dac_relay,
-  output o_zmod_adc_coupling_h_a,
-  output o_zmod_adc_coupling_l_a,
-  output o_zmod_adc_coupling_h_b,
-  output o_zmod_adc_coupling_l_b,
-  output o_zmod_adc_gain_h_a,
-  output o_zmod_adc_gain_l_a,
-  output o_zmod_adc_gain_h_b,
-  output o_zmod_adc_gain_l_b,
-  output o_zmod_adc_com_h,
-  output o_zmod_adc_com_l,
+  output reg or_zmod_dac_relay, /* ZMOD DAC out relay */
+  output o_zmod_adc_coupling_h_a, /* ZMOD ADC input coupling select for of channel A. Differential driver */
+  output o_zmod_adc_coupling_l_a, /* ZMOD ADC input coupling select for of channel A. Differential driver */
+  output o_zmod_adc_coupling_h_b, /* ZMOD ADC input coupling select for of channel B. Differential driver */
+  output o_zmod_adc_coupling_l_b, /* ZMOD ADC input coupling select for of channel B. Differential driver */
+  output o_zmod_adc_gain_h_a, /* ZMOD ADC input gain select for of channel A. Differential driver */
+  output o_zmod_adc_gain_l_a, /* ZMOD ADC input gain select for of channel A. Differential driver */
+  output o_zmod_adc_gain_h_b, /* ZMOD ADC input gain select for of channel B. Differential driver */
+  output o_zmod_adc_gain_l_b, /* ZMOD ADC input gain select for of channel B. Differential driver */
+  output o_zmod_adc_com_h, /* ZMOD ADC commom signal. Differential driver*/
+  output o_zmod_adc_com_l, /* ZMOD ADC commom signal. Differential driver*/
 
-  // output [7:0] o_ja,
-  output reg [2:0] or3_led0,
-  output reg [2:0] or3_led1
+  output reg [2:0] or3_led0, /* Eclypse Z7 led 0*/
+  output reg [2:0] or3_led1  /* Eclypse Z7 led 1*/
   );
 
   /* Clocking wizard signals */
-  reg rst_1, rst;
-  wire pll_locked;
-  wire clk100mhz, clk50mhz;
-  wire clk50mhz_ddr;
+  reg rst_1; /* Synchronizer reset signal */
+  reg rst; /* Synchronizer reset signal */
+  wire pll_locked; /* PLL locked signal */
+  wire clk100mhz; /* 100mhz clock signal */
+  wire clk50mhz; /* 50mhz clock signal */
+  wire clk50mhz_ddr; /* 50mhz forwarded clock signal to out*/
 
   /* output clock */
 
-  /* Clock forwarding for DAC. Single anded clock */
+  /* Clock forwarding for DAC. Single ended clock */
   ODDR #(
   .DDR_CLK_EDGE("SAME_EDGE"),
   .INIT(1'b0),
@@ -109,8 +108,9 @@ module top_eclypse_v1_0 (
   );
 
   /* adc data */
-  wire [13:0] w14_data_a_adc, w14_data_b_adc;
-  wire adc_configured;
+  wire [13:0] w14_data_a_adc; /* Channel A ADC data */
+  wire [13:0] w14_data_b_adc; /* Channel B ADC data */
+  wire adc_configured; /* Configuration done signal */
 
   /* reset circuit */
   always @(posedge clk100mhz)
@@ -124,7 +124,7 @@ module top_eclypse_v1_0 (
     end
 
   /* led management */
-  reg [25:0] r26_led_counter;
+  reg [25:0] r26_led_counter; /* Led blink prescaler */
 
   always @(posedge clk100mhz)
     if (rst) begin
@@ -138,7 +138,7 @@ module top_eclypse_v1_0 (
     end
 
   /* delay for enable output relay */
-  reg [23:0] r24_relay_delay_counter;
+  reg [23:0] r24_relay_delay_counter; /* Delay coungter to enable DAC output relay */
 
   always @(posedge clk100mhz)
     if (rst) begin
@@ -162,9 +162,10 @@ module top_eclypse_v1_0 (
   assign o_dac_fsadjq = 1'b0;
 
   /* Signal memory read */
-  reg signed [13:0] m14_signal [127:0];
-  reg signed [13:0] rs14_data2write;
-  reg [6:0] r7_data_index;
+  reg signed [13:0] m14_signal [127:0]; /* Memory for store signal */
+  reg signed [13:0] rs14_data2write; /* Data indexed to write in DAC output*/
+  reg [6:0] r7_data_index; /* Index for data to write in DAC output */
+
   initial $readmemh("signal.mem", m14_signal);
 
   always @(posedge clk100mhz)
@@ -188,7 +189,7 @@ module top_eclypse_v1_0 (
   assign o_zmod_adc_gain_l_b = 1'b1;
   assign o_adc_sync = 1'b0;
   assign o_zmod_adc_com_h = 1'b0;
-  assign o_zmod_adc_com_l = 1'b1;
+  assign o_zmod_adc_com_l = 1'b0;
 
   clk_wiz_0 clk_wiz (
   .clk_out1(clk100mhz),
