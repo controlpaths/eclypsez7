@@ -50,7 +50,7 @@ module zmod_dac_driver_v1_0 (
     )ODDR_DACDATA(
     .Q(os14_data[i]),
     .C(clk),
-    .CE(1'b1),
+    .CE(r_dacrun),
     .D1(is14_data_i[i]),
     .D2(is14_data_q[i]),
     .R(rst),

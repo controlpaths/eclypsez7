@@ -2,3 +2,6 @@
 /python/.ipynb_checkpoints/
 /script/*
 !/script/*.tcl
+/tb
+/ip/*
+!/ip/*xci

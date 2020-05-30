@@ -15,7 +15,7 @@ module zmod_adc_driver_v1_0 (
   output reg o_adc_configured, /* Adc configuration complete signal */
 
   input signed [13:0] i14_data, /* Parallel input data from ADC */
-  input i_dco, /* Input ch select*/
+  input i_dco, /* Input clock select*/
 
   input clk_spi, /* Input clock for SPI. or_sclk = clk_spi/4*/
   output reg or_sck, /* ADC SPI clk out */
@@ -41,7 +41,7 @@ module zmod_adc_driver_v1_0 (
   /* ADC controller */
   reg [23:0] r24_spi_data_out;    /* Synchronizer 0 spi_data_out. RW | W[1:0] | A[12:0] | DATA[7:0]*/
   reg [23:0] r24_spi_data_out_1;  /* Synchronizer 1 spi_data_out. RW | W[1:0] | A[12:0] | DATA[7:0]*/
-  reg [23:0] 24_spi_data_out_2;   /* Synchronizer 2 spi_data_out. RW | W[1:0] | A[12:0] | DATA[7:0]*/
+  reg [23:0] r24_spi_data_out_2;   /* Synchronizer 2 spi_data_out. RW | W[1:0] | A[12:0] | DATA[7:0]*/
   reg r_spi_start; /* Sychronyzer 0 spi_start */
   reg r_spi_start_1; /* Synchronizer 1 spi start */
   reg r_spi_start_2; /* Synchronizer 2 spi start */
@@ -165,7 +165,7 @@ module zmod_adc_driver_v1_0 (
         20: begin /* Test mode enabled Ramp*/
           r5_adc_config_state <= 5'd21;
 
-          r24_spi_data_out <= {1'b0, 2'b00, p_spi_testmode_add, p_spi_testmode_value_ramp};
+          r24_spi_data_out <= {1'b0, 2'b00, p_spi_testmode_add, p_spi_testmode_value_disabled};
           r_spi_start <= 1'b1;
           r_cmd_read <= 1'b0;
         end
