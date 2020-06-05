@@ -1,22 +1,19 @@
-#  top_eclypse_v1_0
- --- 
+![image](logo.png)
+#  top_eclypse_v1_0 
  **File:** ../../eclypsez7/src/top_eclypse_v1_0.v  
 **Module name**\: top_eclypse_v1_0  
 **Author**\: P Trujillo (pablo@controlpaths.com\)  
 **Date**\: Feb 2020  
 **Description**\: Top module for manage DAC output. ZMOD DAC from Digilent  
 **Revision**\: 1.0 Module created.  
-### Parameter list  
-|**Name**|**Default Value**|**Description**|  
-|-|-|-|  
-      
+
 ### Input list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
 |clk125mhz|[0:0]|25Mhz input clock|  
 |i14_adc_data|[13:0]|Parallel ADC data in|  
 |i_adc_dco|[0:0]|ADC data select input|  
-      
+
 ### Output list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
@@ -47,7 +44,7 @@
 |o_zmod_adc_com_l|[0:0]|ZMOD ADC commom signal. Differential driver|  
 |or3_led0|[2:0]|Eclypse Z7 led 0|  
 |or3_led1|[2:0]|Eclypse Z7 led 1|  
-      
+
 ### Wire list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
@@ -58,7 +55,7 @@
 |w14_data_a_adc|[13:0]|Channel A ADC data|  
 |w14_data_b_adc|[13:0]|Channel B ADC data|  
 |adc_configured|[0:0]|Configuration done signal|  
-      
+
 ### Register list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
@@ -69,7 +66,7 @@
 |m14_signal|[13:0][127:0]|Memory for store signal|  
 |rs14_data2write|[13:0]|Data indexed to write in DAC output|  
 |r7_data_index|[6:0]|Index for data to write in DAC output|  
-      
+
 ### Instantiation example 
  ```verilog   
 top_eclypse_v1_0 top_eclypse_v1_0_inst0(  
@@ -105,3 +102,5 @@ top_eclypse_v1_0 top_eclypse_v1_0_inst0(
 .or3_led1()   
 );   
 ```
+
+Automatic documentation generator. (https://github.com/controlpaths/verilog_parser)

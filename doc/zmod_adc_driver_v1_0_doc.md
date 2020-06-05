@@ -1,15 +1,12 @@
-#  zmod_adc_driver_v1_0
- --- 
+![image](logo.png)
+#  zmod_adc_driver_v1_0 
  **File:** ../../eclypsez7/src/zmod_adc_driver_v1_0.v  
 **Module name**\: zmod_adc_driver  
 **Author**\: P Trujillo (pablo@controlpaths.com\)  
 **Date**\: Feb 2020  
 **Description**\: Driver for ad9648. ZMOD ADC from Digilent. Module uses 2 different clock, so it's neccesary use synchronizers  
 **Revision**\: 1. Module created.  
-### Parameter list  
-|**Name**|**Default Value**|**Description**|  
-|-|-|-|  
-      
+
 ### Input list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
@@ -18,7 +15,7 @@
 |i14_data|[13:0]|Parallel input data from ADC|  
 |i_dco|[0:0]|Input ch select|  
 |clk_spi|[0:0]|Input clock for SPI. or_sclk = clk_spi/4|  
-      
+
 ### Output list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
@@ -28,12 +25,12 @@
 |or_sck|[0:0]|ADC SPI clk out|  
 |or_cs|[0:0]|ADC SPI data IO|  
 |o_sdio|[0:0]|ADC SPI cs out|  
-      
+
 ### Wire list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
 |w_spi_busy|[0:0]|SPI busy signal|  
-      
+
 ### Register list  
 |**Name**|**Width**|**Description**|  
 |-|-|-|  
@@ -49,7 +46,7 @@
 |r_cmd_read|[0:0]|Read command signal|  
 |r4_spi_state|[3:0]|SPI controller state|  
 |r5_data_counter|[4:0]|SPI data to write signal|  
-      
+
 ### Instantiation example 
  ```verilog   
 zmod_adc_driver_v1_0 zmod_adc_driver_v1_0_inst0(  
@@ -66,3 +63,5 @@ zmod_adc_driver_v1_0 zmod_adc_driver_v1_0_inst0(
 .o_sdio()   
 );   
 ```
+
+Automatic documentation generator. (https://github.com/controlpaths/verilog_parser)

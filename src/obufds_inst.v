@@ -7,9 +7,9 @@
 **/
 
 module obufds_inst (
-  input clk_in,
-  output clk_out,
-  output clk_outn
+  input clk_in, /* Input clock */
+  output clk_out, /* Positive output clock */
+  output clk_outn /* Negative output clock */
   );
 
   OBUFDS #(
