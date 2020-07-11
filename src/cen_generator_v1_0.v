@@ -3,7 +3,7 @@
   Author: P Trujillo (pablo@controlpaths.com)
   Date: Mar20
   Description: Clock enable generation according prescaler input.
-  Revision: 1.0 Module created.
+  Revision: 1.0: Module created.
 **/
 
 module cen_generator_v1_0 (

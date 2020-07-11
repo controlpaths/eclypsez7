@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Sun Jun 28 10:02:01 2020
+# Process ID: 4697
+# Current directory: /home/pablo/git/eclypsez7/python
+# Command line: vivado
+# Log file: /home/pablo/git/eclypsez7/python/vivado.log
+# Journal file: /home/pablo/git/eclypsez7/python/vivado.jou
+#-----------------------------------------------------------
+start_gui
+exit
+INFO: [Common 17-206] Exiting Vivado at Sun Jun 28 11:09:26 2020...
