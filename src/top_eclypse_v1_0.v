@@ -108,9 +108,11 @@ module top_eclypse_v1_0 (
   );
 
   /* adc data */
-  wire [13:0] w14_data_a_adc; /* Channel A ADC data */
-  wire [13:0] w14_data_b_adc; /* Channel B ADC data */
+  wire signed [13:0] w14_data_a_adc; /* Channel A ADC data */
+  wire signed [13:0] w14_data_b_adc; /* Channel B ADC data */
   wire adc_configured; /* Configuration done signal */
+
+  wire signed [13:0] w14_data_filter;
 
   /* reset circuit */
   always @(posedge clk100mhz)
@@ -199,11 +201,19 @@ module top_eclypse_v1_0 (
   .clk_in1(clk125mhz)
   );
 
+  mv_avg_filter_8_v1_0 mv_avg_filter_8_inst0(
+  .clk(clk100mhz),
+  .rst(rst),
+  .i32_prescaler(500),
+  .is14_data(w14_data_b_adc),
+  .os14_data(w14_data_filter)
+  );
+
   zmod_dac_driver_v1_0 dac_zmod (
   .clk(clk100mhz),
   .rst(rst),
-  .is14_data_i(rs14_data2write),
-  .is14_data_q(w14_data_a_adc),
+  .is14_data_i(-w14_data_b_adc),
+  .is14_data_q(-w14_data_filter),
   .i_run(1'b1),
   .os14_data(o14_dac_data),
   .clk_spi(clk50mhz), /* spi_clk = clk_spi/4*/

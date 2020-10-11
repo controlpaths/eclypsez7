@@ -24,9 +24,9 @@ First project configure ADC to run in demo mode for the channel 1. This means th
 - **fir32_plnx.tcl**  
 This project uses the PS for run Petalinux, and the PL for implement a 32th order FIR filter. This filter will filter the signal stored in bram. Filter will be configured from petaliux application available in app folder. Input and outputs signals are sent to Digilent's ZMOD DAC.  
 Application has 3 input params: Cut frequency (0-500 -> 0-0.5), Gain (0-200 -> 0-2), and apply a hamming window or not (0,1). For more detailed explanation, visit https://www.controlpaths.com Script for generate block design only available for Vivado 2019.1. If you use other version, in /doc folder, you can find a picture of the block design.  
-
-
-![image](doc/signal.bmp)
+![image](doc/signal.bmp)  
+- **fsk_modulation.tcl**  
+This project generate an simple FSK modulation that encode 2 push buttons available in the Eclypse Board.
 
 ## More information
 If you need more information, yo can contact me on my email pablo@controlpaths.com

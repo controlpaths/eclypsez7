@@ -144,7 +144,7 @@ module zmod_adc_driver_v1_0 (
           r_spi_start <= 1'b1;
         end
         12: begin
-          if (!w_spi_busy) r5_adc_config_state <= 5'd18;
+          if (!w_spi_busy) r5_adc_config_state <= 5'd13;
           else r5_adc_config_state <= 5'd12;
 
           r_spi_start <= 1'b0;
